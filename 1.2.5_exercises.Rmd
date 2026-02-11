@@ -1,0 +1,119 @@
+---
+title: "data_visualization"
+author: "Raul Rocha"
+date: "2026-01-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1. There are `r  nrow(penguins)` rows and `r ncol(penguins)` cols in the penguins data set.
+
+2. Using ?penguins, we get the following:
+bill_depth_mm
+a number denoting bill depth (millimeters)
+Pretty self explanatory.
+
+3.
+```{r}
+ggplot(data = penguins, mapping = aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+ geom_point() +   
+  geom_smooth(
+    aes(group = 1),
+    method = "lm",
+    color = "black",
+    linewidth = 1.2
+  ) +
+ geom_smooth(method = "lm") +
+ labs(title = "Bill length and bill depth", x = "Bill length(mm)", y = "Bill depth(mm)")
+```
+There appears to be a negative relationship between length and depth of a penguin´s bill, when we look at the data without considering the different species. However, when we consider the species, the relationship appears to be positive.
+
+
+4.The plot would consist of three vertical lines or three horizontal lines, according to the choice made for the x and y axes. A more suitable choice of a plot for representing our data is a boxplot, considering that species is a categorical variable.
+```{r}
+ggplot(data = penguins, 
+       mapping = aes(x = species, y = bill_depth_mm)) + 
+  geom_boxplot() +
+  labs(title = "Bill depth per species", x = "Species", y = "Bill depth(mm)")
+```
+
+5.The following code:
+ggplot(data = penguins) + 
+  geom_point()
+would give an error due to the lack of an assigned mapping. R will not know what to assign to the x and y axes.
+
+6.The na.rm argument removes "na" observations from the dataset. Using ?geom_point we can see that by default this variable is equal to FALSE.Now, to create a scatterplot where na.rm = TRUE:
+```{r}
+ggplot(data = penguins,
+       mapping = aes(x = bill_depth_mm,
+                                     y = bill_length_mm,
+                                     color = species)) +
+  geom_point(na.rm = TRUE)
+```
+
+7. Using ?labs, we can see that labs() has a "caption" parameter, and that´s what we´ll use to add the required caption to our plot.
+
+```{r}
+ggplot(data = penguins, mapping = aes(x = bill_depth_mm,
+                                     y = bill_length_mm,
+                                     color = species)) +
+  geom_point(na.rm = TRUE) +
+  labs(title = "Bill length vs bill depth (mm)", x = "bill depth", y = "bill length", caption = "Data come from the palmerpenguins package." )
+```
+
+8.
+```{r}
+ggplot(data = penguins,
+       mapping = aes(x = flipper_length_mm,
+                     y = body_mass_g,
+                     color = bill_depth_mm)) +
+  geom_point() +
+  geom_smooth(method = "gam")
+  
+```
+We´ve figured that "method" should be equal to "gam" in geom_smooth() by trial and error. Of course, bill_depth_mm should be mapped to color.
+
+9.The following code:
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g, color = island)
+) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+
+will provide a scatterplot of the variables "flipper_length_mm" and "body_mass_g". The islands corresponding to each penguin will be distinguished by color. The plot will have a linear regression line, and no confidence band will be displayed around it.
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g, color = island)
+) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+
+I was wrong. There are three curves due to regression methods, and they are not straight lines. That´s because the code didn´t actually set method = "lm". Also, there are three curves instead of just one because color = island is being passed on globally, and not just on the color of the points.
+
+10. The plots produced by the codes:
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point() +
+  geom_smooth()
+  
+and
+
+ggplot() +
+  geom_point(
+    data = penguins,
+    mapping = aes(x = flipper_length_mm, y = body_mass_g)
+  ) +
+  geom_smooth(
+    data = penguins,
+    mapping = aes(x = flipper_length_mm, y = body_mass_g)
+  )
+  
+  will be exactly the same. That´s because it is allowed for us to change the order between ggplot and geom_point in which we´ll pass to R the data and the mapping values. Also, geom_smooth() inherits the data and mapping previously set, so that it is not necessary to write it again inside the geom_smooth() function call. However, doing so will not produce any errors. 
