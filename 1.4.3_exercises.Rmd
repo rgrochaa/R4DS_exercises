@@ -1,0 +1,28 @@
+---
+title: "1.4.3 exercises"
+author: "Raul Rocha"
+date: "2026-02-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1. If species is assigned to the y axis, our boxplot is expected to be horizontal instead of vertical.
+```{r}
+ggplot(data = penguins,
+       mapping = aes(y = species)) +
+  geom_bar()
+```
+2. The difference between the plots is that in the one which uses "color", only the outline of the bars will be colored. However, in the one which uses "fill", the whole bar will be colored. The aeesthetic "fill" is more useful, due to it´s bigger impact on changing the color.
+
+3. It allows us to determine the number of bins ir our histogram.
+
+4.
+```{r}
+ggplot(data = diamonds,
+       mapping = aes(x = carat)) +
+  geom_histogram()
+```
+Setting bins = 100, the plot seems to be recursive.
