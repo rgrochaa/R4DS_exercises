@@ -1,0 +1,117 @@
+---
+title: "1.5.5 exercises"
+author: "Raul Rocha"
+date: "2026-02-14"
+output: html_document
+---
+
+1.
+Using ?mpg, the categorical variables are manufacturer, model, trans, drv, fl and class.
+When we run mpg, we can see this information by reading the labels under the name of each column (chr, dbl, int).
+
+2. 
+```{r}
+ggplot(data  = mpg,
+       mapping = aes(y = hwy,
+                     x =  displ)) +
+  geom_point(aes(color = model))
+```
+
+```{r}
+ggplot(data  = mpg,
+       mapping = aes(y = hwy,
+                     x =  displ)) +
+  geom_point(aes(shape = model))
+```
+
+```{r}
+ggplot(data  = mpg,
+       mapping = aes(y = hwy,
+                     x =  displ)) +
+  geom_point(aes(color = model, shape =  model))
+```
+```{r}
+ggplot(data  = mpg,
+       mapping = aes(y = hwy,
+                     x =  displ)) +
+  geom_point(aes(color = cty))
+```
+
+For a categorical variable with many possible values, color seems to be a more adequate aesthetic than shape. That´s because there are more colors than shapes for R to work with. Also, trying to map a continuous numerical variable to the shape aesthetics raises an error. Mapping continuous numerical variables to the color aesthetics is perfectly reasonable. 
+
+3. 
+```{r}
+ggplot(data = mpg,
+       mapping = aes(y = hwy,
+                     x = displ,
+                     linewidth = cty)) +
+  geom_point()
+```
+
+```{r}
+ggplot(data = mpg,
+       mapping = aes(y = hwy,
+                     x = displ,
+                     linewidth =hwy)) +
+  geom_point()
+```
+
+For this particular dataset, since we've tested mapping the aesthetic linewidth to two different variables and they produced exactly the same plot, it appears to have no effect at all.
+
+4. 
+```{r}
+ggplot(data = mpg,
+       mapping = aes(y = hwy,
+                     x = displ)) +
+  geom_point(aes(color = displ))
+```
+Mapping the same variable to multiple aesthetics works perfectly fine.
+
+5.
+```{r}
+ggplot(data = penguins,
+       mapping = aes(y= bill_depth_mm,
+                     x = bill_length_mm)) +
+  geom_point(aes(color = species)) +
+  facet_wrap(~species)
+```
+We can see that species with more bill depth tend to have less bill length.
+
+6.
+The following code:
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = bill_length_mm, y = bill_depth_mm, 
+    color = species, shape = species
+  )
+) +
+  geom_point() +
+  labs(color = "Species")
+```
+
+yields two different legends because the mapping aes color = species, shape = species provides a legend natively, but the code also added manually a redundant legend by using labs(color = "Species") We can fix this by simply removing the latter:
+
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = bill_length_mm, y = bill_depth_mm, 
+    color = species, shape = species
+  )
+) +
+  geom_point()
+```
+
+
+7.
+
+```{r}
+ggplot(penguins, aes(x = island, fill = species)) +
+  geom_bar(position = "fill")
+ggplot(penguins, aes(x = species, fill = island)) +
+  geom_bar(position = "fill")
+```
+The first plot shows us how the islands are populated by the different penguin species.
+The second plot shows us how the different penguin species are distributed between the islands.
