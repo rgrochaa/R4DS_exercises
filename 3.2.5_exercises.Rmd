@@ -1,0 +1,54 @@
+---
+title: "3.2.5 exercises"
+author: "Raul Rocha"
+date: "2026-02-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+1.
+```{r}
+nycflights13::flights %>% filter(arr_delay > 120)
+nycflights13::flights %>% filter(dest %in% c("IAH", "HOU"))
+nycflights13::flights %>% filter(carrier %in% c("UA", "AA", "DL"))
+nycflights13::flights %>% filter(month %in% c(7,8,9))
+nycflights13::flights %>% filter(arr_delay > 120 & dep_delay <= 0)
+nycflights13::flights %>% filter(dep_delay >=60 & (arr_delay - dep_delay) >=30)
+```
+
+2.
+```{r}
+nycflights13::flights %>% arrange(desc(dep_delay))
+nycflights13::flights %>% arrange(dep_time)
+
+```
+
+3.
+To find the fastest flights, we recall that the definition of velocity is the quotient of the distance traveled per unit of time.
+```{r}
+nycflights13::flights %>% arrange(desc(distance/air_time))
+```
+
+4.
+```{r}
+nycflights13::flights %>%  distinct(month, day)
+```
+Since this dataset contains 365 rows, there has been a flight on every day of 2013.
+
+5.
+```{r}
+farthest_distance <- nycflights13::flights %>% arrange(desc(distance))
+least_distance <- nycflights13::flights %>% arrange(distance)
+
+```
+
+6.
+It does not matter the order in which filter and arrange will be used. If we are to use filter first, and then arrange, the output will be an ordered dataset, according to our variable of choice. Also, if we are to use arrange first, and then filter, the result will be the same; that's because filter does not change the order of the dataset, it simply shows us the observations which meet our specified criteria.
+
+However, there's a big difference in which order we should use these functions. For example, imagine we are to work in a dataset with 1000000 observations, and our filtering process will return a dataset with 10 observations.
+If we use arrange() before filter(), 1000000 observations will have to be arranged. If we use it after, only 10 will. So, it is less compuuter-demanding to use filter() before arrange().
+
