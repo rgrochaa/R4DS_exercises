@@ -1,0 +1,48 @@
+---
+title: "3.5.5 exercises"
+author: "Raul Rocha"
+date: "2026-02-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1.
+dep_time is the time in which the flight actually departed. sched_dep_time is the time that the flight was scheduled to departure. dep_delay measures the delay of the flight, in minutes.
+
+dep_delay is actually completely determined by the previous two variables, since the delay is, by definition, how much time has passed between the scheduled time for departure and the actual time the departure happened.
+
+2.
+
+```{r}
+nycflights13::flights %>% select(dep_time, dep_delay, arr_time, arr_delay)
+```
+
+```{r}
+nycflights13::flights %>% select(starts_with("dep") | starts_with("arr"))
+```
+
+3.
+The variable will be selected only once. 
+
+4.
+It selects any of the listed variables. If all of them are on the dataset, the output will be equal to selecting them manually.
+```{r}
+variables <- c("year", "month", "day", "dep_delay", "arr_delay")
+nycflights13::flights %>% select(any_of(variables))
+```
+
+5.
+It is surprising, since R is case sensitive.
+The select helpers have a ignore.case parameter, and it is set to true by default. So, to change the output for it to be case sensitive, we need to set ignore.case = FALSE. 
+
+6.
+
+```{r}
+nycflights13::flights %>% rename(air_time_min = air_time) %>% relocate(air_time_min)
+```
+
+7.
+The result of flights %>% select(tailnum) is a dataset containing only one column: tailnum. So, when we pass that to arrange(arr_delay), an error will rise because there isn't a variable called arr_delay in our dataset.
