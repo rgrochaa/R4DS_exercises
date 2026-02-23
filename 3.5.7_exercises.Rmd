@@ -1,0 +1,54 @@
+---
+title: "3.5.7 exercises"
+author: "Raul Rocha"
+date: "2026-02-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1.
+```{r}
+flights %>% summarize(
+  delay = mean(arr_delay,
+               na.rm = TRUE),
+                      .by = carrier
+  ) %>% slice_max(delay, n = 16)
+```
+
+Frontier Airlines has the worst average delay.
+
+```{r}
+flights |> 
+  group_by(carrier, dest) |> 
+  summarize(
+    n = n(), 
+    delay = mean(arr_delay, na.rm = TRUE)
+  ) %>%
+  ggplot(mapping = aes(x = delay)) + geom_density()
+```
+
+To disentangle the effects of bad carriers vs bad airports, the code above can be useful. For instance, note that F9 is usually late, regardless of the destination. This suggests that the problem lies in the carrier, not in the destination airport.
+
+2.
+```{r}
+flights %>%
+  summarize(.by = c(flight,arr_delay, dest)) %>%
+  slice_max(dep_delay, n = 1, 
+            by = dest)
+```
+
+3.
+
+```{r}
+flights %>%
+  summarise(delay = mean(dep_delay, na.rm = TRUE),
+            .by = hour) %>%
+  ggplot(mapping = aes(y = delay,
+                       x = hour)) +
+  geom_point() +
+  scale_x_continuous(breaks = seq(0, 24, by = 1))
+```
+
